@@ -1,0 +1,32 @@
+# Use a simple incremented version number.
+version: '{build}'
+
+# Download the repository as a zip archive.
+# https://www.appveyor.com/docs/how-to/repository-shallow-clone/
+shallow_clone: true
+
+environment:
+  RUST: stable-i686-pc-windows-gnu
+  matrix:
+    - MY_ENV: none
+    - UNICODE: -DUNICODE
+
+install:
+  # Install Rust
+  - appveyor-retry appveyor downloadfile https://win.rustup.rs/ -filename rustup-init.exe -timeout 60000
+  - rustup-init --version
+  - rustup-init -y --default-toolchain %RUST%
+  - set PATH=%USERPROFILE%\.cargo\bin;%PATH%
+  - rustc --version
+  - cargo --version
+
+  # Set path for toolchain
+  - set PATH=C:\msys64\mingw32\bin;%PATH%
+  - where gcc
+
+# We do everything in the test_script phase, so we disable the build phase to
+# avoid AppVeyor trying to build something and failing.
+build: false
+
+test_script:
+  - cargo build -vv

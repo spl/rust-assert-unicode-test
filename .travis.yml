@@ -1,0 +1,13 @@
+language: rust
+rust: stable-i686-pc-windows-gnu
+os: windows
+
+matrix:
+  include:
+    - name: No env
+    - name: UNICODE
+      env:
+        UNICODE: -DUNICODE
+
+script:
+  - cargo build -vv
